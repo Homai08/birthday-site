@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Old English Text MT', serif;
+            background-color: #000000;
+            color: white;
+            padding: 20px;
+            overflow: hidden;
+        }
+        h1, p {
+            font-size: 2rem;
+            animation: fadeInOut 3s ease-in-out forwards;
+        }
+        .cake, .candles-container, .lighter, .blow-btn, .message {
+            display: none;
+        }
+        .cake {
+            width: 80%;
+            max-width: 300px;
+            margin-top: 20px;
+        }
+        .candles-container {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+            margin-top: 20px;
+        }
+        .candle {
+            width: 8px;
+            height: 40px;
+            background: red;
+            margin: 2px;
+            position: relative;
+            border-radius: 5px;
+        }
+        .flame {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 15px;
+            background: orange;
+            border-radius: 50%;
+            opacity: 0;
+        }
+        .lighter {
+            width: 30px;
+            position: absolute;
+            top: 80px;
+            left: -10%;
+            display: none;
+        }
+        .blow-btn {
+            margin-top: 20px;
+            padding: 8px 15px;
+            font-size: 1rem;
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            display: none;
+        }
+        @keyframes moveLighter {
+            0% { left: -10%; }
+            100% { left: 80%; }
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
+        }
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: red;
+            opacity: 0;
+            animation: confettiFall 3s linear infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="banner">🎉 Happy Birthday! 🎂</h1>
+    <img src="cake1.avif" alt="Birthday Cake" class="cake" id="cake">
+    
+    <div class="candles-container" id="candlesContainer">
+        <script>
+            for (let i = 0; i < 39; i++) {
+                document.write('<div class="candle"><div class="flame"></div></div>');
+            }
+        </script>
+    </div>
+
+    <img src="lighter.png" alt="Lighter" class="lighter" id="lighter">
+    
+    <button class="blow-btn" id="blowButton" onclick="blowCandles()">Blow the Candles</button>
+
+    <p class="message" id="message"></p>
+
+    <!-- 🎶 Music (Birthday Song) -->
+    <audio id="birthdaySong" src="Good_Morning_to_All(chosic.com).mp3" preload="auto" loop></audio>
+
+    <script>
+        // ✅ FORCE AUTOPLAY WITHOUT USER CLICK
+        document.addEventListener("DOMContentLoaded", function() {
+            let birthdaySong = document.getElementById('birthdaySong');
+            
+            // Force autoplay after a slight delay (fix for Safari/iPhone)
+            setTimeout(() => {
+                let playPromise = birthdaySong.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        let tryAutoplay = setInterval(() => {
+                            let newPlayPromise = birthdaySong.play();
+                            if (newPlayPromise !== undefined) {
+                                newPlayPromise.then(() => clearInterval(tryAutoplay)).catch(() => {});
+                            }
+                        }, 500);
+                    });
+                }
+            }, 1000); // Delayed autoplay (fix for iPhone Safari)
+        });
+
+        setTimeout(() => { document.getElementById('banner').style.display = "none"; }, 4000);
+        setTimeout(() => { document.getElementById('cake').style.display = "block"; }, 5000);
+        setTimeout(() => { 
+            document.getElementById('cake').style.display = "none"; 
+            document.getElementById('candlesContainer').style.display = "flex";
+        }, 9000);
+        
+        setTimeout(() => {
+            let lighter = document.getElementById('lighter');
+            lighter.style.display = "block"; 
+            lighter.style.animation = "moveLighter 4s linear forwards";
+        }, 10000);
+
+        setTimeout(() => {
+            document.querySelectorAll('.flame').forEach(f => f.style.opacity = "1");
+            document.getElementById('lighter').style.display = "none"; 
+            document.getElementById('blowButton').style.display = "block";
+        }, 14000);
+
+        function blowCandles() {
+            document.querySelectorAll('.flame').forEach(f => f.style.opacity = "0");
+            document.getElementById('candlesContainer').style.display = "none";
+            document.getElementById('blowButton').style.display = "none";
+
+            // 🎊 Start confetti effect
+            startConfetti();
+
+            // 📜 After confetti stops, show messages
+            setTimeout(() => {
+                showMessages();
+            }, 3000);
+        }
+
+        function startConfetti() {
+            for (let i = 0; i < 100; i++) {
+                let confetti = document.createElement("div");
+                confetti.className = "confetti";
+                confetti.style.left = Math.random() * window.innerWidth + "px";
+                confetti.style.animationDuration = (Math.random() * 2 + 1) + "s";
+                confetti.style.backgroundColor = ["red", "purple", "black"][Math.floor(Math.random() * 3)];
+                document.body.appendChild(confetti);
+                setTimeout(() => { confetti.style.opacity = "1"; }, 100);
+            }
+            setTimeout(() => {
+                document.querySelectorAll('.confetti').forEach(confetti => confetti.remove());
+            }, 3000);
+        }
+
+        function showMessages() {
+            let messages = [
+                "🎉 Happy Birthday to Best Bitch Ever!",
+                "Hope you have an amazing day!",
+                "I sincerely apologize for my behaviours.",
+                "Please, open your gifts.",
+                "I Love you",
+                "I hope you forgive me...",
+                "Happiest birthday to you."
+            ];
+
+            let messageIndex = 0;
+            function showNextMessage() {
+                if (messageIndex < messages.length) {
+                    document.getElementById('message').innerHTML = messages[messageIndex];
+                    document.getElementById('message').style.display = "block";
+
+                    setTimeout(() => {
+                        document.getElementById('message').style.display = "none";
+                        messageIndex++;
+                        showNextMessage();
+                    }, 4000);
+                }
+            }
+
+            showNextMessage();
+        }
+    </script>
+
+</body>
+</html>
